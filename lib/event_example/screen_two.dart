@@ -10,48 +10,52 @@ class ScreenTwo extends StatefulWidget {
 }
 
 class _ScreenTwoState extends State<ScreenTwo> with EventMixin<ScreenTwo> {
-  String _message = 'Waiting for events...';
+  List<String> _messages = ['Waiting for events...'];
+
+  void _addMessage(String message) {
+    setState(() {
+      if (_messages.length == 1 && _messages[0] == 'Waiting for events...') {
+        _messages = [message];
+      } else {
+        _messages.add(message);
+      }
+    });
+  }
 
   @override
   void handleStringEvent(StringEvent event) {
-    setState(() {
-      _message = 'Received StringEvent: ${event.message}';
-    });
+    _addMessage('Received StringEvent: ${event.message}');
+    print('Received StringEvent: ${event.message}');
   }
 
   @override
   void handleIntEvent(IntEvent event) {
-    setState(() {
-      _message = 'Received IntEvent: ${event.number}';
-    });
+    _addMessage('Received IntEvent: ${event.number}');
+    print('Received IntEvent: ${event.number}');
   }
 
   @override
   void handleDoubleEvent(DoubleEvent event) {
-    setState(() {
-      _message = 'Received DoubleEvent: ${event.value}';
-    });
+    _addMessage('Received DoubleEvent: ${event.value}');
+    print('Received DoubleEvent: ${event.value}');
   }
 
   @override
   void handleListEvent(ListEvent event) {
-    setState(() {
-      _message = 'Received ListEvent: ${event.items.join(', ')}';
-    });
+    _addMessage('Received ListEvent: ${event.items.join(', ')}');
+    print('Received ListEvent: ${event.items.join(', ')}');
   }
 
   @override
   void handleMapEvent(MapEvent event) {
-    setState(() {
-      _message = 'Received MapEvent: ${event.items.toString()}';
-    });
+    _addMessage('Received MapEvent: ${event.items.toString()}');
+    print('Received MapEvent: ${event.items.toString()}');
   }
 
   @override
   void handleObjectEvent(ObjectEvent event) {
-    setState(() {
-      _message = 'Received ObjectEvent: ${event.myObject.name}, ${event.myObject.age}';
-    });
+    _addMessage('Received ObjectEvent: ${event.myObject.name}, ${event.myObject.age}');
+    print('Received ObjectEvent: ${event.myObject.name}, ${event.myObject.age}');
   }
 
   @override
@@ -61,7 +65,39 @@ class _ScreenTwoState extends State<ScreenTwo> with EventMixin<ScreenTwo> {
         title: const Text('Screen Two'),
       ),
       body: Center(
-        child: Text(_message),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Expanded(
+              child: ListView.builder(
+                itemCount: _messages.length,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      _messages[index],
+                      style: const TextStyle(fontSize: 18),
+                      textAlign: TextAlign.center,
+                    ),
+                  );
+                },
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/screenThree', arguments: _messages);
+              },
+              child: const Text('Go to Screen Three'),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('Go Back'),
+            ),
+          ],
+        ),
       ),
     );
   }

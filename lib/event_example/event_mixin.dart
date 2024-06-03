@@ -1,7 +1,7 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'event_bus.dart';
 import 'events.dart';
-import 'dart:async';
 
 mixin EventMixin<T extends StatefulWidget> on State<T> {
   final List<StreamSubscription> _subscriptions = [];

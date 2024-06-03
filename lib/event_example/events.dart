@@ -64,7 +64,9 @@ class EventBus {
   }
 
   void dispose() {
-    _eventControllers.values.forEach((controller) => controller.close());
+    for (var controller in _eventControllers.values) {
+      controller.close();
+    }
     _eventControllers.clear();
   }
 
