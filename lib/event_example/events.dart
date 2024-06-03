@@ -1,5 +1,3 @@
-import 'dart:async';
-
 class StringEvent {
   final String message;
   StringEvent(this.message);
@@ -34,41 +32,4 @@ class MyObject {
   final String name;
   final int age;
   MyObject(this.name, this.age);
-}
-
-class EventBus {
-  static final EventBus _instance = EventBus._internal();
-
-  factory EventBus() {
-    return _instance;
-  }
-
-  EventBus._internal();
-
-  final _eventControllers = <Type, StreamController>{};
-
-  void fire<T extends Object>(T event) {
-    final controller = _eventControllers.putIfAbsent(
-      T,
-          () => StreamController.broadcast(),
-    );
-    controller.sink.add(event);
-  }
-
-  Stream on<T extends Object>() {
-    final controller = _eventControllers.putIfAbsent(
-      T,
-          () => StreamController.broadcast(),
-    );
-    return controller.stream;
-  }
-
-  void dispose() {
-    for (var controller in _eventControllers.values) {
-      controller.close();
-    }
-    _eventControllers.clear();
-  }
-
-  static EventBus get instance => _instance;
 }
